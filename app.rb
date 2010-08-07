@@ -16,21 +16,23 @@ class Link
 	property :created_by, String
 	property :created_at, DateTime
 end
-configure :production do 
-  DataMapper.setup(:default, ENV['DATABASE_URL']) 
-end
 
-configure :development do
-  DataMapper::Logger.new($stdout, :debug)
-  DataMapper.setup(:default, "sqlite3://#{Dir.pwd}/dev.db")
-end
-
-configure do
-  DataMapper.finalize
-  DataMapper.auto_upgrade!
-end
 
 class RubyOres < Sinatra::Base
+	configure :production do 
+	  DataMapper.setup(:default, ENV['DATABASE_URL']) 
+	end
+
+	configure :development do
+	  DataMapper::Logger.new($stdout, :debug)
+	  DataMapper.setup(:default, "sqlite3://#{Dir.pwd}/dev.db")
+	end
+
+	configure do
+	  DataMapper.finalize
+	  DataMapper.auto_upgrade!
+	end
+
   get '/' do
 	@links = Link.all(:order => :created_at)
     haml :index

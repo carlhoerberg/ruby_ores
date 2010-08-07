@@ -1,2 +1,7 @@
 %p Welcome
 %a{:href=>"/add"} Add link
+%ul 
+  -for link in @links
+    %li
+      %a{:href=>link.url}= link.title
+      link.body
