@@ -3,7 +3,7 @@ require 'sinatra/base'
 require 'dm-core'
 require 'dm-migrations'
 
-#include openid_auth.rb
+require 'openid_auth.rb'
 
 class Link
 	include DataMapper::Resource
@@ -19,6 +19,7 @@ end
 
 
 class RubyOres < Sinatra::Base
+	use OpenIDAuth 
 	configure :production do 
 	  DataMapper.setup(:default, ENV['DATABASE_URL']) 
 	end
@@ -39,14 +40,17 @@ class RubyOres < Sinatra::Base
   end
 
   get '/add' do
+    redirect '/login' unless OpenIDAuth.logged_in?
     haml :add
   end
 
   post '/add' do
+    redirect '/login' unless OpenIDAuth.logged_in?
 	link = Link.create(
 		:url=>params[:url],
 		:title=>params[:title], 
-		:body=>params[:body])
+		:body=>params[:body],
+		:created_by => session[:user])
     redirect '/'
   end
 end

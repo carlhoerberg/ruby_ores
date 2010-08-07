@@ -20,19 +20,19 @@ class OpenIDAuth < Sinatra::Base
   end
 
   # In a real app, you might want to do something like this 
-  #
-  # enable :sessions 
-  #
-  # Returns true if somebody is logged in  
-  # def logged_in?
-  #   !session[:user].nil?
-  # end
-  #
-  # Visit /logout to log out
-  # get '/logout' do
-  #   session[:user] = nil
-  #   # redirect '/login'
-  # end
+  
+  enable :sessions 
+ 
+  #Returns true if somebody is logged in  
+   def logged_in?
+     !session[:user].nil?
+   end
+  
+  #Visit /logout to log out
+   get '/logout' do
+     session[:user] = nil
+     redirect '/login'
+   end
 
   # Send everything else to the super app
   not_found do
@@ -84,20 +84,8 @@ class OpenIDAuth < Sinatra::Base
         # Startup something
         "Login successfull."  
         # Maybe something like
-        # session[:user] = User.find_by_openid(oidresp.display_identifier)
+        session[:user] = User.find_by_openid(oidresp.display_identifier)
     end
   end
 end
-
-__END__
-
-@@ login
-
-<form class="openid_login" method="post" accept-charset="UTF-8" action='/login/openid'>
-  <label for="openid_identifier">Your OpenID:</label>
-  <input type="text" name="openid_identifier" 
-    style="background: url(http://openid.net/images/login-bg.gif) no-repeat #FFF 5px; padding-left: 25px;" />    
-      <small><a href="http://openid.net/get/" title="What is an OpenID? Where can i get one?'" class="help">What?</a></small>
-      <input type="submit" value="Login" />
-</form>
 
