@@ -2,6 +2,6 @@
 %a{:href=>"/add"} Add link
 %ul 
   -for link in @links
-    %li
+    %li#link.id
       %a{:href=>link.url}= link.title
-      link.body
+      = link.body

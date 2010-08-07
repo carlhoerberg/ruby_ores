@@ -6,7 +6,9 @@ Feature: First page
   Scenario: Can add link
     Given I am on the home page
     When I follow "Add link"
+	And I fill in "title" with "Rubylinks"
     And I fill in "url" with "http://rubylink.com/post/1"
     And I press "Submit"
     Then I should be on the home page
-    And I should see "http://rubylink.com/post/1"
+    And I should see "Rubylinks"
+
