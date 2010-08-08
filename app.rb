@@ -112,22 +112,23 @@ post '/auth' do
 	redirect "/"
 end
 
-def get_user(token)
-	u = URI.parse('https://rpxnow.com/api/v2/auth_info')
-	req = Net::HTTP::Post.new(u.path)
-	req.set_form_data({'token' => token, 'apiKey' => '406851aee5052f464a0dadeba54277a57397159a', 'format' => 'json', 'extended' => 'true'})
-	http = Net::HTTP.new(u.host,u.port)
-	http.use_ssl = true if u.scheme == 'https'
-	json = JSON.parse(http.request(req).body)
+	def get_user(token)
+		u = URI.parse('https://rpxnow.com/api/v2/auth_info')
+		req = Net::HTTP::Post.new(u.path)
+		req.set_form_data({'token' => token, 'apiKey' => '406851aee5052f464a0dadeba54277a57397159a', 'format' => 'json', 'extended' => 'true'})
+		http = Net::HTTP.new(u.host,u.port)
+		http.use_ssl = true if u.scheme == 'https'
+		json = JSON.parse(http.request(req).body)
 
-	if json['stat'] == 'ok'
-		identifier = json['profile']['identifier']
-		nickname = json['profile']['preferredUsername']
-		nickname = json['profile']['displayName'] if nickname.nil?
-		email = json['profile']['email']
-		{:identifier => identifier, :nickname => nickname, :email => email}
-	else
-		#raise LoginFailedError, 'Cannot log in. Try another account!'
-		raise Exception, "An error occured: #{json['err']['msg']}"
+		if json['stat'] == 'ok'
+			identifier = json['profile']['identifier']
+			nickname = json['profile']['preferredUsername']
+			nickname = json['profile']['displayName'] if nickname.nil?
+			email = json['profile']['email']
+			{:identifier => identifier, :nickname => nickname, :email => email}
+		else
+			#raise LoginFailedError, 'Cannot log in. Try another account!'
+			raise Exception, "An error occured: #{json['err']['msg']}"
+		end
 	end
 end
