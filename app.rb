@@ -70,7 +70,6 @@ set :sessions, true
   end
 
   get '/add' do
-    user = User.current
     haml :add
   end
   
@@ -111,7 +110,6 @@ post '/auth' do
 	session[:userid] = user.identifier # keep what is stored small
 	redirect "/"
 end
-
 	def get_user(token)
 		u = URI.parse('https://rpxnow.com/api/v2/auth_info')
 		req = Net::HTTP::Post.new(u.path)
