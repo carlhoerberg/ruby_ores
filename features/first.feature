@@ -20,7 +20,7 @@ Feature: First page
 	| b    | www.yahoo.com          | to be added | b        | http://www.yahoo.com  |
 	
   @clean
-  Scenario Outline: Use vote up
+  Scenario Outline: Use the like or the unlike buttons
 	Given I am on the home page
 	When I press "<vote>" within "<title>"
 	Then I should be on the home page

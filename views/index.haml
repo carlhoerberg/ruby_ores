@@ -16,7 +16,6 @@
         %input{:type=> "hidden", :name=> "id", :value=> link.id}
         %input{:type=> "hidden", :name=> "operator", :value=> "-"}
         %input#unlike{:type=> "submit", :value=> "Unlike" }
-      %div
-        =  link.votes
-        %a{:href=>link.url}= link.title
-        = link.body
+      =  link.votes
+      %a{:href=>link.url}= link.title
+      = link.body

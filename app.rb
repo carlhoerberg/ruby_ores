@@ -87,7 +87,7 @@ set :sessions, true
 		:url=>params[:url],
 		:title=>params[:title], 
 		:body=>params[:body],
-		:created_by => session[:user_id])
+		:created_by => session[:userid])
 	if @link.save
 		redirect '/'
 	else
