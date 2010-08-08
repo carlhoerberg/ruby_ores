@@ -19,12 +19,15 @@ Feature: First page
 	| a    | http://www.google.com  | to be added | a        | http://www.google.com |
 	| b    | www.yahoo.com          | to be added | b        | http://www.yahoo.com  |
 	
-	
   @clean
-  Scenario: Use vote up
+  Scenario Outline: Use vote up
 	Given I am on the home page
-	When I press "vote_up"
-	Then I should see "1"
-	When I press "vote_down"
-	Then I should see "0"
+	When I press "<vote>" within "<title>"
+	Then I should be on the home page
+	And I should see "<result>"
+	
+  Examples:
+    | vote          | result | title     |
+	| like           | 1       | //a[text() = 'google']/.. |
+    | unlike       | -1      | //a[text() = 'yahoo']/..   |
 	

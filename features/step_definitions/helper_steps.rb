@@ -1,5 +1,17 @@
-After ('@clean') do
-		Link.destroy
+Before ('@clean') do
+	Link.destroy
+	link = Link.new(
+		:url=> "www.google.com",
+		:title=> "google",
+		:body=> "hello"
+	)
+	link.save
+	link = Link.new(
+		:url=> "www.yahoo.com",
+		:title=> "yahoo",
+		:body=> "hello"
+	)
+	link.save
 end
 
 Then /^(?:|I )should see a link with url "([^\"]*)"(?: within "([^\"]*)")?$/ do |url, selector|

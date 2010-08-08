@@ -19,8 +19,7 @@ class Link
 	property :url, String, :format => /^(http|https):\/\/[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(([0-9]{1,5})?\/.*)?$/ix
 	property :title, String
 	property :body, Text
-	property :up_vote, Integer
-	property :down_vote, Integer
+	property :votes, Integer, :required=> true, :default=> 0
 	property :created_by, String
 	property :created_at, DateTime
 		
@@ -64,7 +63,8 @@ class RubyOres < Sinatra::Base
   
   post '/vote' do
 	link = Link.get(params[:id])
-	link.up_vote ? link.up_vote += 1 : link.up_vote = 1
+	link.votes = link.votes + 1 if params[:operator] == "+"
+	link.votes = link.votes - 1 if params[:operator] == "-"
 	link.save
 	redirect "/"
   end
