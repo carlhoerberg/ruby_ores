@@ -1,12 +1,32 @@
+:javascript
+  function fix_url() {
+    var url = $("#url").val();
+    if(url.match("http") == null && url.match("https") == null)
+    {
+       url = "http://" + url;
+    }
+    $("#url").val(url);
+  };
+  $(function() {
+    $("#form").submit(fix_url);
+  });
+
 %h2 Add link
-%form{:method=>'POST'}
+- unless @link.nil?
+  %ul.errors
+    -@link.errors.each do |errors|
+      -errors.each do |error|
+        %li= error
+
+%form#form{:method=>'POST'}
   %label 
     Url:
-    %input{:type => 'text', :name => 'url'}
+    %input#url{:type => 'text', :name => 'url'}
   %label
     Title:
     %input{:type=>'text', :name=>'title'}
   %label
     Body:
     %textarea{:name=>'body'}
-  %input{:type=>'submit',:value=>'Submit'}    
+  %input{:type=>'submit',:value=>'Submit'}
+  

@@ -27,15 +27,24 @@ end
 class Link
 	include DataMapper::Resource
 	property :id, Serial
-	property :url, String
+	property :url, String, :format => /^(http|https):\/\/[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(([0-9]{1,5})?\/.*)?$/ix
 	property :title, String
 	property :body, Text
-	property :up_vote, Integer
-	property :down_vote, Integer
+	property :votes, Integer, :required=> true, :default=> 0
 	property :created_by, String
 	property :created_at, DateTime
+		
+	def url=(submited_url)
+		attribute_set(:url, fix_url(submited_url))
+	end
+	
+	def fix_url(url)
+		unless url.match(/^http|https/)
+			url = "http://" + url
+		end
+		url
+	end
 end
-
 
 class RubyOres < Sinatra::Base
 set :sessions, true
@@ -61,19 +70,32 @@ set :sessions, true
   end
 
   get '/add' do
-    redirect '/login' unless OpenIDAuth.logged_in?
+    user = User.current
     haml :add
+  end
+  
+  post '/vote' do
+	link = Link.get(params[:id])
+	link.votes = link.votes + 1 if params[:operator] == "+"
+	link.votes = link.votes - 1 if params[:operator] == "-"
+	link.save
+	redirect "/"
   end
 
   post '/add' do
-if session[:userid].nil? then erb :login end 
+	if session[:userid].nil? then redirect '/' end
 	link = Link.create(
 		:url=>params[:url],
 		:title=>params[:title], 
 		:body=>params[:body],
-		:created_by => session[:user])
-    redirect '/'
+		:created_by => session[:user_id])
+	if @link.save
+		redirect '/'
+	else
+		haml :add
+	end
   end
+
 get '/logout' do
   session[:userid] = nil
   redirect '/'
@@ -108,5 +130,4 @@ def get_user(token)
 		#raise LoginFailedError, 'Cannot log in. Try another account!'
 		raise Exception, "An error occured: #{json['err']['msg']}"
 	end
-end
 end

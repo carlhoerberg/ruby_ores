@@ -1,11 +1,16 @@
 %p Welcome
 %a{:href=>"/add"} Add link
-%ul 
-  -for link in @links
-    %li#link.id
+%div
+  - for link in @links
+    %div{:id=> link.id}
+      %form{:method=> "post", :action=> "/vote"}
+        %input{:type=> "hidden", :name=> "id", :value=> link.id}
+        %input{:type=> "hidden", :name=> "operator", :value=> "+"}
+        %input#like{:type=> "submit", :value=> "Like" }
+      %form{:method=> "post", :action=> "/vote"}
+        %input{:type=> "hidden", :name=> "id", :value=> link.id}
+        %input{:type=> "hidden", :name=> "operator", :value=> "-"}
+        %input#unlike{:type=> "submit", :value=> "Unlike" }
+      =  link.votes
       %a{:href=>link.url}= link.title
       = link.body
-%form{:method=>"POST", :action=>"/hej"}
-  %input{:type=>"hidden", :name=>"_method", :value=>"PUT"}
-  %input{:type=>"text", :name=>"id"}
-  %input{:type=>"submit", :value=>"OK"}
