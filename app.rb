@@ -6,9 +6,6 @@ require 'dm-validations'
 require 'open-uri'
 require 'digest/md5'
 #require 'rack-flash'
-require 'json' 
-require 'net/http'
-require 'net/https'
 
 class User
 	include DataMapper::Resource
@@ -110,24 +107,33 @@ post '/login' do
 	session[:userid] = user.identifier # keep what is stored small
 	redirect "/"
 end
-	def get_user(token)
-		u = URI.parse('https://rpxnow.com/api/v2/auth_info')
-		req = Net::HTTP::Post.new(u.path)
-		req.set_form_data({'token' => token, 'apiKey' => '406851aee5052f464a0dadeba54277a57397159a', 'format' => 'json', 'extended' => 'true'})
-		http = Net::HTTP.new(u.host,u.port)
-		http.use_ssl = true if u.scheme == 'https'
-		http.verify_mode = OpenSSL::SSL::VERIFY_NONE
-		json = JSON.parse(http.request(req).body)
 
-		if json['stat'] == 'ok'
-			identifier = json['profile']['identifier']
-			nickname = json['profile']['preferredUsername']
-			nickname = json['profile']['displayName'] if nickname.nil?
-			email = json['profile']['email']
-			{:identifier => identifier, :nickname => nickname, :email => email}
-		else
-			#raise LoginFailedError, 'Cannot log in. Try another account!'
-			raise Exception, "An error occured: #{json['err']['msg']}"
-		end
-	end
+get '/rss.xml' do
+baseUrl = "http://rubyores.heroku.com/"
+@posts = Link.all(:order => :created_at.desc, :limit => 50)
+
+builder do |xml|
+    xml.instruct! :xml, :version => '1.0'
+    xml.rss :version => "2.0" do
+      xml.channel do
+        xml.title "Ruby Ores"
+        xml.description "A Ruby news site."
+        xml.link baseUrl        
+        @posts.each do |post|
+          xml.item do
+            xml.title post.title
+            xml.link "#{baseUrl}#{post.id}"
+            xml.description post.body
+            xml.pubDate Time.parse(post.created_at.to_s).rfc822()
+            xml.guid "#{baseUrl}#{post.id}"
+          end
+        end
+      end
+    end
+  end
+end
+end
+
+if __FILE__ == $0
+   RubyOres.run! :host => 'localhost', :port => 9393
 end
