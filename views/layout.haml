@@ -2,9 +2,10 @@
 %html
   %head
     %title Ruby Ores
-    %link{:rel=> "stylesheet", :type=> "text/css", :href=> "http://ajax.googleapis.com/ajax/libs/jqueryui/1.7/themes/smoothness/jquery-ui.css"}
-    %script{:type=> 'text/javascript', :src=> "http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.js"}
-    %script{:type=> 'text/javascript', :src=> "http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.3/jquery-ui.js"}
+    %link{:href => "/rss.xml", :rel => "alternate", :title => "RSS Feed", :type => "application/rss+xml"}
+    %link{:rel=> "stylesheet", :type=> "text/css", :href=> "http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/smoothness/jquery-ui.css"}
+    %script{:type=> 'text/javascript', :src=> "http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.js"}
+    %script{:type=> 'text/javascript', :src=> "http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.js"}
     :javascript
       $(function() {
         $(":submit").button();
@@ -14,6 +15,7 @@
     
   %body
     %h1 Ruby Ores
+    %a{:href => "/rss.xml", :type => "application/rss+xml"} RSS
     %a.rpxnow{:href => "https://rubyores.rpxnow.com/openid/v2/signin?token_url=http%3A%2F%2Flocalhost%3A9393%2Flogin", :onclick => "return false;"} Sign In
     %a{:href => "/logout", :onclick => "return false;"} Log out
     %p= yield
