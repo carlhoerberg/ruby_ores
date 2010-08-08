@@ -4,6 +4,15 @@ require 'dm-core'
 require 'dm-migrations'
 require 'dm-validations'
 
+class User
+	include DataMapper::Resource
+	property :id, Serial
+	
+	def self.current
+		User.new
+	end
+end
+
 class Link
 	include DataMapper::Resource
 	property :id, Serial
@@ -49,7 +58,7 @@ class RubyOres < Sinatra::Base
   end
 
   get '/add' do
-    redirect '/login' unless OpenIDAuth.logged_in?
+    user = User.current
     haml :add
   end
   
