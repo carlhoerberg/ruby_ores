@@ -1,4 +1,5 @@
 require 'rubygems'
 require 'app.rb'
 
-run Rack::Cascade.new [RubyOres]
+RubyOres.run! :host => 'localhost', :port => 9393
+#run Rack::Cascade.new [RubyOres]
