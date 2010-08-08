@@ -2,8 +2,25 @@
 %html
   %head
     %title Ruby Ores
-    %script{:type=> 'text/javascript', :src=> "http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"}
+    %link{:rel=> "stylesheet", :type=> "text/css", :href=> "http://ajax.googleapis.com/ajax/libs/jqueryui/1.7/themes/smoothness/jquery-ui.css"}
+    %script{:type=> 'text/javascript', :src=> "http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.js"}
+    %script{:type=> 'text/javascript', :src=> "http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.3/jquery-ui.js"}
+    :javascript
+      $(function() {
+        $(":submit").button();
+        $("")
+        $("#links").selectable();
+      });
+    
   %body
     %h1 Ruby Ores
+    %a.rpxnow{:href => "https://rubyores.rpxnow.com/openid/v2/signin?token_url=http%3A%2F%2Flocalhost%3A9393%2Flogin", :onclick => "return false;"} Sign In
+    %a{:href => "/logout", :onclick => "return false;"} Log out
     %p= yield
+    :javascript
+       var rpxJsHost = (("https:" == document.location.protocol) ? "https://" : "http://static.");
+       document.write(unescape("%3Cscript src='" + rpxJsHost + "rpxnow.com/js/lib/rpx.js' type='text/javascript'%3E%3C/script%3E"));
+    :javascript
+       RPXNOW.overlay = true;
+       RPXNOW.language_preference = 'en';
 

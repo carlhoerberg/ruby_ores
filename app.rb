@@ -31,7 +31,7 @@ class Link
 	property :title, String
 	property :body, Text
 	property :votes, Integer, :required=> true, :default=> 0
-	property :created_by, String
+	property :created_by, String, :required=> true
 	property :created_at, DateTime
 		
 	def url=(submited_url)
@@ -70,7 +70,6 @@ set :sessions, true
   end
 
   get '/add' do
-    user = User.current
     haml :add
   end
   
@@ -84,7 +83,7 @@ set :sessions, true
 
   post '/add' do
 	if session[:userid].nil? then redirect '/' end
-	link = Link.create(
+	@link = Link.create(
 		:url=>params[:url],
 		:title=>params[:title], 
 		:body=>params[:body],
@@ -105,19 +104,19 @@ get '/login' do
  erb :login
 end
 
-post '/auth' do
+post '/login' do
 	openid_user = get_user(params[:token])
 	user = User.first_or_create({:identifier => openid_user[:identifier]},{:nickname => openid_user[:nickname], :email => openid_user[:email], :photo_url => "http://www.gravatar.com/avatar/#{Digest::MD5.hexdigest(openid_user[:email])}" })
 	session[:userid] = user.identifier # keep what is stored small
 	redirect "/"
 end
-
 	def get_user(token)
 		u = URI.parse('https://rpxnow.com/api/v2/auth_info')
 		req = Net::HTTP::Post.new(u.path)
 		req.set_form_data({'token' => token, 'apiKey' => '406851aee5052f464a0dadeba54277a57397159a', 'format' => 'json', 'extended' => 'true'})
 		http = Net::HTTP.new(u.host,u.port)
 		http.use_ssl = true if u.scheme == 'https'
+		http.verify_mode = OpenSSL::SSL::VERIFY_NONE
 		json = JSON.parse(http.request(req).body)
 
 		if json['stat'] == 'ok'

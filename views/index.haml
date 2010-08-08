@@ -1,8 +1,13 @@
+:javascript
+  $(function() {
+    
+  });
+
 %p Welcome
 %a{:href=>"/add"} Add link
-%div
+%ol#selectable
   - for link in @links
-    %div{:id=> link.id}
+    %li.ui-widget-content
       %form{:method=> "post", :action=> "/vote"}
         %input{:type=> "hidden", :name=> "id", :value=> link.id}
         %input{:type=> "hidden", :name=> "operator", :value=> "+"}
@@ -11,6 +16,7 @@
         %input{:type=> "hidden", :name=> "id", :value=> link.id}
         %input{:type=> "hidden", :name=> "operator", :value=> "-"}
         %input#unlike{:type=> "submit", :value=> "Unlike" }
-      =  link.votes
-      %a{:href=>link.url}= link.title
-      = link.body
+      %div
+        =  link.votes
+        %a{:href=>link.url}= link.title
+        = link.body
