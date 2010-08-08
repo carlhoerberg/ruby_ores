@@ -28,7 +28,7 @@ class Link
 	property :title, String
 	property :body, Text
 	property :votes, Integer, :required=> true, :default=> 0
-	property :created_by, String, :required=> true
+	property :created_by, String
 	property :created_at, DateTime
 		
 	def url=(submited_url)
