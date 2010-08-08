@@ -18,8 +18,8 @@ class Vote
 	include DataMapper::Resource
 	property :link_id, Integer, :key => true
 	property :user_id, String, :key => true
-	property :vote, Integer 
-validates_numericality_of :vote, :gte => -1, :lte => 1, :integer_only => true
+	property :is_down?, Boolean, :required => true, :default=> false
+	validates_numericality_of :vote, :gte => -1, :lte => 1, :integer_only => true
 end
 class Link
 	include DataMapper::Resource
@@ -71,9 +71,15 @@ set :sessions, true
   end
   
   post '/vote' do
+	@vote = Vote.new(
+			:user_id=> session[:userid],
+			:link_id=> params[:id]
+			:is_down?=> params[:operator] == "-"
+		)
+	@vote.save
 	link = Link.get(params[:id])
-	link.votes = link.votes + 1 if params[:operator] == "+"
-	link.votes = link.votes - 1 if params[:operator] == "-"
+	link.votes = link.votes + 1 unless vote.is_down?
+	link.votes = link.votes - 1 if vote.is_down?
 	link.save
 	redirect "/"
   end
