@@ -9,7 +9,6 @@
     :javascript
       $(function() {
         $(":submit").button();
-        $("")
         $("#links").selectable();
       });
     
@@ -18,7 +17,7 @@
     %a{:href => "/rss.xml", :type => "application/rss+xml"} RSS
     %a.rpxnow{:href => "https://rubyores.rpxnow.com/openid/v2/signin?token_url=http%3A%2F%2Flocalhost%3A9393%2Flogin", :onclick => "return false;"} Sign In
     %a{:href => "/logout", :onclick => "return false;"} Log out
-    %p= yield
+    #content= yield
     :javascript
        var rpxJsHost = (("https:" == document.location.protocol) ? "https://" : "http://static.");
        document.write(unescape("%3Cscript src='" + rpxJsHost + "rpxnow.com/js/lib/rpx.js' type='text/javascript'%3E%3C/script%3E"));
