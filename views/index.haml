@@ -5,3 +5,7 @@
     %li#link.id
       %a{:href=>link.url}= link.title
       = link.body
+%form{:method=>"POST", :action=>"/hej"}
+  %input{:type=>"hidden", :name=>"_method", :value=>"PUT"}
+  %input{:type=>"text", :name=>"id"}
+  %input{:type=>"submit", :value=>"OK"}

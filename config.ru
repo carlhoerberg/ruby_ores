@@ -1,4 +1,5 @@
 require 'rubygems'
-require File.join(File.dirname(__FILE__), 'app.rb')
+require 'app.rb'
+require 'openid_auth.rb'
 
-run RubyOres
+run Rack::Cascade.new [RubyOres, OpenIDAuth]

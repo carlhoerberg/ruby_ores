@@ -3,8 +3,6 @@ require 'sinatra/base'
 require 'dm-core'
 require 'dm-migrations'
 
-require 'openid_auth.rb'
-
 class Link
 	include DataMapper::Resource
 	property :id, Serial
@@ -19,7 +17,6 @@ end
 
 
 class RubyOres < Sinatra::Base
-	use OpenIDAuth 
 	configure :production do 
 	  DataMapper.setup(:default, ENV['DATABASE_URL']) 
 	end
@@ -35,7 +32,7 @@ class RubyOres < Sinatra::Base
 	end
 
   get '/' do
-	@links = Link.all(:order => :created_at)
+    @links = Link.all(:order => :created_at.desc, :limit => 10)
     haml :index
   end
 
@@ -52,5 +49,8 @@ class RubyOres < Sinatra::Base
 		:body=>params[:body],
 		:created_by => session[:user])
     redirect '/'
+  end
+  put '/hej' do
+     "Id: #{params[:id]}"
   end
 end
