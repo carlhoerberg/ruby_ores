@@ -1,7 +1,12 @@
 %p Welcome
 %a{:href=>"/add"} Add link
-%ul 
-  -for link in @links
-    %li#link.id
+%div
+  - for link in @links
+    %div{:id=> link.id}
+      %form{:method=> "post", :action=> "/vote"}
+        %input{:type=> "hidden", :name=> "id", :value=> link.id}
+        %input{:id=> "vote_up", :type=> "submit", :value=> "Vote!" }
+        %input{:id=> "vote_down", :type=> "submit", :value=> "Vote!" }
+        =  link.up_vote
       %a{:href=>link.url}= link.title
       = link.body
