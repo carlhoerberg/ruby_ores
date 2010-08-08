@@ -6,6 +6,7 @@ require 'dm-validations'
 require 'open-uri'
 require 'digest/md5'
 #require 'rack-flash'
+require 'rpx'
 
 class User
 	include DataMapper::Resource
@@ -102,7 +103,7 @@ get '/login' do
 end
 
 post '/login' do
-	openid_user = get_user(params[:token])
+	openid_user = RPX.get_user(params[:token])
 	user = User.first_or_create({:identifier => openid_user[:identifier]},{:nickname => openid_user[:nickname], :email => openid_user[:email], :photo_url => "http://www.gravatar.com/avatar/#{Digest::MD5.hexdigest(openid_user[:email])}" })
 	session[:userid] = user.identifier # keep what is stored small
 	redirect "/"
