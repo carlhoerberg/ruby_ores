@@ -132,3 +132,7 @@ end
 		end
 	end
 end
+
+if __FILE__ == $0
+   RubyOres.run! :host => 'localhost', :port => 9393
+end
