@@ -4,8 +4,6 @@ require 'dm-core'
 require 'dm-migrations'
 require 'dm-validations'
 
-#include openid_auth.rb
-
 class Link
 	include DataMapper::Resource
 	property :id, Serial
@@ -46,11 +44,12 @@ class RubyOres < Sinatra::Base
 	end
 
   get '/' do
-	@links = Link.all(:order => :created_at)
+    @links = Link.all(:order => :created_at.desc, :limit => 10)
     haml :index
   end
 
   get '/add' do
+    redirect '/login' unless OpenIDAuth.logged_in?
     haml :add
   end
   
@@ -65,7 +64,8 @@ class RubyOres < Sinatra::Base
 	@link = Link.new(
 		:url=>params[:url],
 		:title=>params[:title], 
-		:body=>params[:body])
+		:body=>params[:body],
+		:created_by => session[:user])
 	if @link.save
 		redirect '/'
 	else
