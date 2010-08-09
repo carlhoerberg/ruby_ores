@@ -74,8 +74,8 @@ set :sessions, true
 	@vote = Vote.new(
 			:user_id=> session[:userid],
 			:link_id=> params[:id]
-			:is_down?=> params[:operator] == "-"
 		)
+	@vote.is_down?=> params[:operator] == "-"
 	@vote.save
 	link = Link.get(params[:id])
 	link.votes = link.votes + 1 unless vote.is_down?
