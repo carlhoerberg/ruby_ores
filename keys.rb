@@ -1,3 +1,3 @@
 module API_Keys
-	RPX_KEY = 
+	PAGEGLIMPS_KEY = 4b900dc18d40995fdbd3cfa42199b12d
 end
