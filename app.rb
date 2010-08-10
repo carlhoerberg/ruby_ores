@@ -7,6 +7,9 @@ require 'open-uri'
 require 'digest/md5'
 #require 'rack-flash'
 require 'rpx'
+require 'net/http'
+require 'uri'
+require 'apikeys'
 
 class User
 	include DataMapper::Resource
@@ -61,12 +64,30 @@ set :sessions, true
 	  DataMapper.finalize
 	  DataMapper.auto_upgrade!
 	end
-
+  helpers do 
+	def get_thumbnail url
+		"http://images.pageglimpse.com/v1/thumbnails?url=" + url + "/&size=small&devkey=" + APIKeys::PAGEGLIMPS
+		# req = Net::HTTP::Get.new u.path
+		# res = Net::HTTP.start(u.host, u.port) { |http|
+			# http.request req
+		# }
+		# res.content_type
+		# u = uri.parse("http://images.pageglimpse.com/v1") 
+		# net::http.start(u.host, u.port) {|http|
+			# http.request_get("/thumbnails?url=" + "http://www.techcrunch.com" + "/&size=small&devkey=" + apikeys::pageglimps) { |respons|
+				# respons.read_body do |seg|
+					# seg
+				# end
+			# }
+		# }
+	end
+  end
+  
   get '/' do
     @links = Link.all(:order => :created_at.desc, :limit => 10)
     haml :index
   end
-
+  
   get '/add' do
     haml :add
   end

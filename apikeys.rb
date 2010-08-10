@@ -1,0 +1,4 @@
+module APIKeys
+	PAGEGLIMPS = '4b900dc18d40995fdbd3cfa42199b12d'
+	RPW = '406851aee5052f464a0dadeba54277a57397159a'
+end

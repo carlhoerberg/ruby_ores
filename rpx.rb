@@ -12,7 +12,7 @@ class RPX
 		http.use_ssl = true if u.scheme == 'https'
 		http.verify_mode = OpenSSL::SSL::VERIFY_NONE
 		json = JSON.parse(http.request(req).body)
-
+		
 		if json['stat'] == 'ok'
 			identifier = json['profile']['identifier']
 			nickname = json['profile']['preferredUsername']
