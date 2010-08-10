@@ -10,6 +10,7 @@ require 'rpx'
 require 'net/http'
 require 'uri'
 require 'apikeys'
+require 'models'
 
 class RubyOres < Sinatra::Base
 set :sessions, true
@@ -36,7 +37,7 @@ set :sessions, true
   end
   
   get '/' do
-    @links = Link.all(:order => :created_at.desc, :limit => 10)
+    @links = Models::Link.all(:order => :created_at.desc, :limit => 10)
     haml :index
   end
   
@@ -45,7 +46,7 @@ set :sessions, true
   end
   
   post '/vote' do
-	@vote = Vote.new(
+	@vote = Models::Vote.new(
 			:user_id=> session[:userid],
 			:link_id=> params[:id]
 		)
@@ -83,7 +84,7 @@ end
 
 post '/login' do
 	openid_user = RPX.get_user(params[:token])
-	user = User.first_or_create({:identifier => openid_user[:identifier]},{:nickname => openid_user[:nickname], :email => openid_user[:email], :photo_url => "http://www.gravatar.com/avatar/#{Digest::MD5.hexdigest(openid_user[:email])}" })
+	user = Models::User.first_or_create({:identifier => openid_user[:identifier]},{:nickname => openid_user[:nickname], :email => openid_user[:email], :photo_url => "http://www.gravatar.com/avatar/#{Digest::MD5.hexdigest(openid_user[:email])}" })
 	session[:userid] = user.identifier # keep what is stored small
 	redirect "/"
 end
