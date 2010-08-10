@@ -7,6 +7,7 @@
         %input{:type=> "hidden", :name=> "id", :value=> link.id}
         %input{:type=> "hidden", :name=> "operator", :value=> "+"}
         %input#like{:type=> "submit", :value=> "Like" }
+      %image{:src=> "#{ get_thumbnail link.url}" }
       =  link.votes
       %form{:method=> "post", :action=> "/vote"}
         %input{:type=> "hidden", :name=> "id", :value=> link.id}
@@ -14,5 +15,5 @@
         %input#unlike{:type=> "submit", :value=> "Unlike" }
     %div
       %a{:href=>link.url}= link.title
-      %image{:src=> "#{get_thumbnail link.url}"}
+      
       = link.body

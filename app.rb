@@ -15,7 +15,7 @@ class User
 	include DataMapper::Resource
 	property :identifier, String, :key => true
 	property :email,      String
-        property :nickname,   String
+    property :nickname,   String
 	property :photo_url,  String
 end
 class Vote
@@ -66,20 +66,8 @@ set :sessions, true
 	end
   helpers do 
 	def get_thumbnail url
-		"http://images.pageglimpse.com/v1/thumbnails?url=" + url + "/&size=small&devkey=" + APIKeys::PAGEGLIMPS
-		# req = Net::HTTP::Get.new u.path
-		# res = Net::HTTP.start(u.host, u.port) { |http|
-			# http.request req
-		# }
-		# res.content_type
-		# u = uri.parse("http://images.pageglimpse.com/v1") 
-		# net::http.start(u.host, u.port) {|http|
-			# http.request_get("/thumbnails?url=" + "http://www.techcrunch.com" + "/&size=small&devkey=" + apikeys::pageglimps) { |respons|
-				# respons.read_body do |seg|
-					# seg
-				# end
-			# }
-		# }
+		res = "http://images.pageglimpse.com/v1/thumbnails?url=" + url +"/&size=small&devkey="  + APIKeys::PAGEGLIMPS
+		res
 	end
   end
   
