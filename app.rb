@@ -4,7 +4,6 @@ require 'dm-core'
 require 'dm-migrations'
 require 'dm-validations'
 require 'open-uri'
-require 'digest/md5'
 #require 'rack-flash'
 require 'rpx'
 require 'net/http'
@@ -37,7 +36,7 @@ set :sessions, true
   end
   
   get '/' do
-    @links = Models::Link.all(:order => :created_at.desc, :limit => 10)
+    @links = Link.all(:order => :created_at.desc, :limit => 10)
     haml :index
   end
   
@@ -46,7 +45,7 @@ set :sessions, true
   end
   
   post '/vote' do
-	@vote = Models::Vote.new(
+	@vote = Vote.new(
 			:user_id=> session[:userid],
 			:link_id=> params[:id]
 		)
@@ -84,34 +83,34 @@ end
 
 post '/login' do
 	openid_user = RPX.get_user(params[:token])
-	user = Models::User.first_or_create({:identifier => openid_user[:identifier]},{:nickname => openid_user[:nickname], :email => openid_user[:email], :photo_url => "http://www.gravatar.com/avatar/#{Digest::MD5.hexdigest(openid_user[:email])}" })
+	user = User.first_or_create({:identifier => openid_user[:identifier]},{:nickname => openid_user[:nickname], :email => openid_user[:email]})
 	session[:userid] = user.identifier # keep what is stored small
 	redirect "/"
 end
 
 get '/rss.xml' do
-baseUrl = "http://rubyores.heroku.com/"
-@posts = Link.all(:order => :created_at.desc, :limit => 50)
+	baseUrl = "http://rubyores.heroku.com/"
+	@posts = Link.all(:order => :created_at.desc, :limit => 50)
 
-builder do |xml|
-    xml.instruct! :xml, :version => '1.0'
-    xml.rss :version => "2.0" do
-      xml.channel do
-        xml.title "Ruby Ores"
-        xml.description "A Ruby news site."
-        xml.link baseUrl        
-        @posts.each do |post|
-          xml.item do
-            xml.title post.title
-            xml.link "#{baseUrl}#{post.id}"
-            xml.description post.body
-            xml.pubDate Time.parse(post.created_at.to_s).rfc822()
-            xml.guid "#{baseUrl}#{post.id}"
-          end
-        end
-      end
-    end
-  end
+	builder do |xml|
+	    xml.instruct! :xml, :version => '1.0'
+	    xml.rss :version => "2.0" do
+	      xml.channel do
+		xml.title "Ruby Ores"
+		xml.description "A Ruby news site."
+		xml.link baseUrl        
+		@posts.each do |post|
+		  xml.item do
+		    xml.title post.title
+		    xml.link "#{baseUrl}#{post.id}"
+		    xml.description post.body
+		    xml.pubDate Time.parse(post.created_at.to_s).rfc822()
+		    xml.guid "#{baseUrl}#{post.id}"
+		  end
+		end
+	      end
+	    end
+	  end
 end
 end
 
