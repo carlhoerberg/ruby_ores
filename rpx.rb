@@ -1,7 +1,9 @@
+require 'uri'
 require 'json' 
 require 'net/http'
 require 'net/https'
 require 'apikeys'
+require 'open-uri'
 
 class RPX
 	def self.get_user(token)
